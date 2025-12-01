@@ -7,8 +7,8 @@ class SafeCracker:
         self.file = 'input1.txt'
         self.password_method = '0x434C49434B'
 
-    def run_cracker(self, file, password_method=None):
-        zero_count = self.crack(file, password_method=password_method)
+    def run_cracker(self, file, password_method=None, debug=False):
+        zero_count = self.crack(file, password_method=password_method, debug=debug)
         print(f"Zero count: {zero_count}")
 
     def run_part1(self):
@@ -35,6 +35,8 @@ class SafeCracker:
         for line in lines:
             direction = line[0]
             amt = int(line[1:])
+            if debug:
+                print(line)
             if password_method:
                 dial_pointer, res = self.apply_password(direction, dial_pointer, amt, self.password_method)
             else:
@@ -47,34 +49,34 @@ class SafeCracker:
         return zero_cnt
 
     def apply_password(self, direction:str, dial_pointer:int, amt:int, method=None):
-
         if direction == 'L':
             amt = -amt
 
         cnt = 0
         if method == self.password_method:
-            starter = dial_pointer
-            dial_pointer += amt
-            if starter != 0:
-                if dial_pointer >= 100 or dial_pointer <= 0:    # so i am over counting when dial = 0 and it passes backwards. Probably same forwards
-                    cnt = 1
-                    # print('incrs')
-                # cnt += amt // 100
-            # else:
-            #     cnt += amt // 100
-            #     dial_pointer += amt
-            cnt += abs(amt) // 100
+            full_revolutions = abs(amt) // 100
+            cnt += full_revolutions
+            remaining = abs(amt) % 100
+            if amt < 0:
+                remaining = -remaining
+            new_dial = dial_pointer + remaining
 
-            # print(dial_pointer)
-            dial_pointer %= 100
-
+            # you need to solve for when d = 0 and it moves in either directions. can't just else it
+            if amt > 0:
+                if new_dial > 99:
+                    cnt += 1
+            elif amt < 0 and dial_pointer != 0: # the fact that i did not check if dial_pointer is 0 is the problem
+                if new_dial <= 0:
+                    cnt += 1
+            # if amt < 0 and dial is at 0, we only need to count rotations
+            dial_pointer = new_dial % 100
         else:
             dial_pointer += amt
             dial_pointer %= 100
             if dial_pointer == 0:
                 cnt = 1
 
-        return  dial_pointer, cnt
+        return dial_pointer, cnt
 
     def read_file(self, file_path):
         with open(file_path, 'r') as file:
