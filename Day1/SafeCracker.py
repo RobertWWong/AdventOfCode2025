@@ -53,14 +53,21 @@ class SafeCracker:
 
         cnt = 0
         if method == self.password_method:
+            starter = dial_pointer
             dial_pointer += amt
-            if dial_pointer >= 100 or dial_pointer <= 0:
-                cnt = 1
+            if starter != 0:
+                if dial_pointer >= 100 or dial_pointer <= 0:    # so i am over counting when dial = 0 and it passes backwards. Probably same forwards
+                    cnt = 1
+                    # print('incrs')
+                # cnt += amt // 100
+            # else:
+            #     cnt += amt // 100
+            #     dial_pointer += amt
+            cnt += abs(amt) // 100
+
             # print(dial_pointer)
             dial_pointer %= 100
 
-            if amt > 100:    # multiple rotations
-                rotation = amt // 100
         else:
             dial_pointer += amt
             dial_pointer %= 100
