@@ -41,6 +41,21 @@ class IDChecker:
     def __init__(self, file_path="input1.txt"):
         self.file_path = file_path
 
+    def the_easy_solution(self, intervals:["first_id-second_id"]):
+        import re
+        invalid_patterns = set()
+        invalid_numbers = set()
+        pattern = r'(.+?)\1$'
+
+        part2_pattern = r'(.+?)\1+$'    # don't check the set when using this
+
+        repeating_pattern = re.compile(pattern)
+        for interval in intervals:
+            for num in range(interval[0], interval[1] + 1):
+                repeats = repeating_pattern.match(str(num))
+                if repeats and not repeats.group(1) in invalid_patterns:
+                    invalid_patterns.add(repeats.group(1))
+                    invalid_numbers.add(num)
 
     def run_test(self, file_path=None, part_2=False):
         if not file_path:
