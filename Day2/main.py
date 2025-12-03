@@ -17,3 +17,8 @@ if __name__ == '__main__':
     Checker.use_regex()
     t4e = time.perf_counter()
     print(f'part 2 regex took {t4e-t3s} seconds')
+
+    t4s = time.perf_counter()
+    Checker.run_custom()
+    t4e = time.perf_counter()
+    print(f'part 2 custom took {t4e-t4s} seconds')

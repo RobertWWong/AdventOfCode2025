@@ -97,6 +97,9 @@ class IDChecker:
         t2 = self.run_test(part_2=True)
         print(f'expected: 4174379265 got:{t2}    {t2 == 4174379265}')
         self.check_ids(self.file_path, True)
+    def run_custom(self):
+        # Sub 800ms
+        self.check_ids('test_custom.txt')   #let's find sum from 1 up to one digit place less of max int size
 
     def check_ids(self, file_path, part_2=False):
         res = self.process_ids(file_path, part_2)
