@@ -41,7 +41,28 @@ class IDChecker:
     def __init__(self, file_path="input1.txt"):
         self.file_path = file_path
 
+    def use_regex(self):
+        res = self.read_file(self.file_path)
+        intervals = []
+        for i in res:
+            start, end = i.split('-')
+            start = int(start)
+            end = int(end)
+            intervals.append((start, end))
+
+
+        dupes = self.the_easy_solution(intervals)
+        print(dupes)
+        print(sum(dupes))
+
+
+
     def the_easy_solution(self, intervals:["first_id-second_id"]):
+        '''
+        One problem. Slows as mud
+        :param intervals:
+        :return:
+        '''
         import re
         invalid_patterns = set()
         invalid_numbers = set()
@@ -56,6 +77,7 @@ class IDChecker:
                 if repeats and not repeats.group(1) in invalid_patterns:
                     invalid_patterns.add(repeats.group(1))
                     invalid_numbers.add(num)
+        return [i for i in invalid_numbers]
 
     def run_test(self, file_path=None, part_2=False):
         if not file_path:
