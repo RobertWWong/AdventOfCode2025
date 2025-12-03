@@ -52,14 +52,13 @@ class IDChecker:
 
 
         dupes = self.the_easy_solution(intervals)
-        print(dupes)
         print(sum(dupes))
 
 
 
     def the_easy_solution(self, intervals:["first_id-second_id"]):
         '''
-        One problem. Slows as mud
+        One problem. Slows as mud. About 10x slower
         :param intervals:
         :return:
         '''
@@ -71,10 +70,13 @@ class IDChecker:
         part2_pattern = r'(.+?)\1+$'    # don't check the set when using this
 
         repeating_pattern = re.compile(pattern)
+        # repeating_pattern = re.compile(part2_pattern)
+
         for interval in intervals:
             for num in range(interval[0], interval[1] + 1):
                 repeats = repeating_pattern.match(str(num))
                 if repeats and not repeats.group(1) in invalid_patterns:
+                # if repeats:
                     invalid_patterns.add(repeats.group(1))
                     invalid_numbers.add(num)
         return [i for i in invalid_numbers]
