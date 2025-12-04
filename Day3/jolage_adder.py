@@ -34,6 +34,11 @@ class JoltageAdder:
         res = self.process_jolt_largest_seen(joltage_list)
         return res
 
+    def run_part_2(self):
+        joltage_list = self.read_file()
+        res = self.process_joltage_memoize_p2(joltage_list)
+        return res
+
     def brute_force(self, joltage_list:list[str]):
         '''
         I could do better :(
@@ -148,3 +153,15 @@ class JoltageAdder:
         # print(res)
         print(output)
         return output
+
+    def process_joltage_memoize_p2(self, joltage_list):
+        '''
+        Will have to recursively process each jolt, choosing to take each digit or not, then memoize the results.
+        Somehow.
+        Need to figure out how to create cutoff to stop processing once past a certain amount. Somehow.
+        This is going to be O(N * 2^12) kinda work. It's disgusting.
+        :param joltage_list:
+        :return:
+        '''
+        # todo come back and finish later
+        pass
