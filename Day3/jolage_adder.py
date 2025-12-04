@@ -2,7 +2,11 @@
 class JoltageAdder:
     '''
     Part1: Given an array of strings ints ('12345'), find the largest 2 digit value in one pass.
-    Sum up all those largest value at the end of the array
+    Sum up all those largest value at the end of the array.
+
+    Smart way would to keep an array of largest number seen past this index for left and right side.
+
+    Part 2 is recursion with memoizations
     '''
 
     def __init__(self, file_path=None):
@@ -10,28 +14,90 @@ class JoltageAdder:
 
 
     def read_file(self, file_path=None) -> list[str]:
-        if file_path:
-            self.file_path = file_path
-        with open(self.file_path, "r") as f:
+        if not file_path:
+            file_path = self.file_path
+        with open(file_path, "r") as f:
             return [line.strip() for line in f]
 
     def run_test_1(self) -> int:
         joltage_list = self.read_file("test.txt")
-        res = self.process_joltage(joltage_list)
+        # res = self.process_joltage(joltage_list)
+        # res = self.brute_force(joltage_list)
+        res = self.process_jolt_largest_seen(joltage_list)
+
         return res
 
     def run_part_1(self) -> int:
         joltage_list = self.read_file()
-        res = self.process_joltage(joltage_list)
+        # res = self.process_joltage(joltage_list)
+        # res = self.brute_force(joltage_list)
+        res = self.process_jolt_largest_seen(joltage_list)
         return res
 
-    def process_joltage(self, joltage_list:list[str]):
+    def brute_force(self, joltage_list:list[str]):
+        '''
+        I could do better :(
+        :param joltage_list:
+        :return:
+        '''
+        total = 0
+        for jolt in joltage_list:
+            max_num = 0
+            for i in range(len(jolt) - 1):
+                for j in range(i + 1, len(jolt)):
+                    d1 = int(jolt[i])
+                    d2 = int(jolt[j])
+                    num = int(f"{d1}{d2}")
+
+                    max_num = max(num, max_num)
+            total += max_num
+        print(total)
+        return total
+
+    def process_jolt_largest_seen(self, joltage_list:list[str]):
+        '''
+        Thanks sum.
+        You should keep track of the largest number you have seen on the left and right side of this index.
+        This will allow you to know  what the next largest digits could choose given your current index and + 1
+        :param joltage_list:
+        :return:
+        '''
+        total = 0
+        jolt_len = len(joltage_list[0])
+        for jolt in joltage_list:
+            big_left = ['0'] * jolt_len
+            big_right = ['0'] * jolt_len
+            big_left[0] = jolt[0]
+            big_right[-1] = jolt[-1]
+            for idx in range(len(jolt) - 2, -1, -1):
+                rval = jolt[idx]
+                r_right = big_right[idx + 1]
+                big_right[idx] = max(rval, r_right)
+            for idx in range(1, len(jolt)):
+                lval = jolt[idx]
+                l_left = big_left[idx - 1]
+                big_left[idx] = max(lval, l_left)
+            largest = 0
+
+            for idx in range(len(jolt) - 1):
+                num = int(f"{big_left[idx]}{big_right[idx + 1]}")
+                largest = max(largest, num)
+            # print(f'{big_left}\n{big_right}\nLargest is: {largest}')
+
+            total += largest
+
+        print(total)
+        return total
+
+    def process_joltage_iterative(self, joltage_list:list[str]):
         '''
         Things you need to process.
         9 111 9 (both ends)
         2 5565444   (somewhere middle)
         2 111 911 9  (right half)
         175 3333    (left half)
+
+        Nah my iterative tracking skills are wack.
         :param joltage_list:
         :return:
         '''
