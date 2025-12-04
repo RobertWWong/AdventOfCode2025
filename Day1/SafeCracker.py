@@ -1,10 +1,11 @@
+from util.day_initializer import DayInitializer
 
 
-class SafeCracker:
+class SafeCracker(DayInitializer):
 
 
     def __init__(self):
-        self.file = 'input1.txt'
+        super().__init__('input1.txt')
         self.password_method = '0x434C49434B'
 
     def run_cracker(self, file, password_method=None, debug=False):
@@ -13,11 +14,11 @@ class SafeCracker:
 
     def run_part1(self):
         self.run_simple_test()
-        self.run_cracker(self.file)
+        self.run_cracker(self.file_path)
 
     def run_part2(self):
         self.run_password_method_test()
-        self.run_cracker(self.file, self.password_method)
+        self.run_cracker(self.file_path, self.password_method)
 
     def run_simple_test(self):
         zero_count = self.crack('test.txt', debug=True)

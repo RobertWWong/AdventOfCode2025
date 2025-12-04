@@ -1,5 +1,7 @@
+from util.day_initializer import DayInitializer
 
-class JoltageAdder:
+
+class JoltageAdder(DayInitializer):
     '''
     Part1: Given an array of strings ints ('12345'), find the largest 2 digit value in one pass.
     Sum up all those largest value at the end of the array.
@@ -10,7 +12,7 @@ class JoltageAdder:
     '''
 
     def __init__(self, file_path=None):
-        self.file_path = file_path if file_path else "input.txt"
+        super().__init__(file_path if file_path else "input.txt")
 
 
     def read_file(self, file_path=None) -> list[str]:

@@ -1,9 +1,10 @@
 from collections import Counter
 
 from mako.util import read_file
+from util.day_initializer import DayInitializer
 
 
-class IDChecker:
+class IDChecker(DayInitializer):
     '''
         Didn't understand problem prompt at first. You are to go through
         a range of numbers starting from the first id and ending at the second (all inclusive).
@@ -39,7 +40,7 @@ class IDChecker:
         
     '''
     def __init__(self, file_path="input1.txt"):
-        self.file_path = file_path
+        super().__init__(file_path)
 
     def use_regex(self):
         res = self.read_file(self.file_path)
