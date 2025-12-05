@@ -11,5 +11,5 @@ if [ -z "$DAY" ]; then
         exit 1
     fi
 fi
-
+touch "Day${DAY}/test.txt"
 python3 -c "from util.web_scraper import WebScraper; WebScraper().retrieve_input($DAY)"
