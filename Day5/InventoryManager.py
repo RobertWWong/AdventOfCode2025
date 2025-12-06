@@ -7,12 +7,9 @@ class InventoryManager(DayInitializer):
 
     def run_test(self, part_2=False):
         file_path = 'test.txt'
-        if part_2:
-            self.run_part2(file_path)
-        else:
-            self.run_part1(file_path)
+        self.collect_ingredients(file_path, part_2)
 
-    def run_part1(self, file_path=None):
+    def collect_ingredients(self, file_path=None, part_2=False):
         '''
         First part is to parse and record valid fresh int ranges.
         Then we must determine if the item is fresh or not.
@@ -35,6 +32,7 @@ class InventoryManager(DayInitializer):
         range on bucket might not work. Might actually just keep a single heap and process it at the end then bin search
 
         Problem, what is the problem range? 0 - 10 ^ 15?        ooooo
+        :param part_2:
         :param file_path:
         :return:
         '''
@@ -64,8 +62,11 @@ class InventoryManager(DayInitializer):
                 # Process at end or right here? Here would be most optimal but lazy
                 heappush(current_bucket, (start, end))
             else:   # begin verification
-                if self.is_fresh(int(item[0]), range_bucket):
+                if not part_2 and self.is_fresh(int(item[0]), range_bucket):
                     amount_fresh += 1
+        if part_2:
+            amount_fresh += self.accumulate_ranges(range_bucket)
+
         print(f'Amount of fresh ingredients {amount_fresh}')
 
     def process_heap(self, range_bucket:list[list[tuple[int, int]]]):
@@ -73,6 +74,10 @@ class InventoryManager(DayInitializer):
         Problem. What if our id is digit len 3 but nothing or invalid range is in that bucket
         and some max bucket later actually contain a starting min < id.
         id = 213;     bucket = [ 0, (50-99), [111-211, 214-999], 0, 0, (212 - 222_222) <- valid]
+
+        Okay lmao part 2 is to just count up the intervals as our valid ranges
+        aka (50-99) = 50 valid ranges (99 - 50 + 1) (1, 9 -> 9 - 1 + 1 == 9)
+
         :param range_bucket:
         :return:
         '''
@@ -125,4 +130,14 @@ class InventoryManager(DayInitializer):
                 start = mid + 1
         return False
 
-        pass
+    def accumulate_ranges(self, range_bucket) -> int:
+        '''
+        Part 2: The valid ingredients are just the UNIQUE items within the range.
+        :param range_bucket:
+        :return:
+        '''
+        total = 0
+        for bucket in range_bucket:
+            for start, end in bucket:
+                total += end - start + 1
+        return total
